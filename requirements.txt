@@ -1,0 +1,4 @@
+Flask
+pandas
+geopy
+flask-cors
