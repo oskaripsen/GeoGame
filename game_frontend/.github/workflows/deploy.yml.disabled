@@ -1,0 +1,37 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          clean: true
+      
+      - name: Create clean .gitignore
+        run: |
+          echo "*.iml" > .gitignore
+          echo ".dart_tool/" >> .gitignore
+          echo "build/" >> .gitignore
+          echo ".flutter-plugins" >> .gitignore
+          echo ".flutter-plugins-dependencies" >> .gitignore
+          
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.10.0'
+          channel: 'stable'
+      
+      - run: flutter pub get
+      - run: flutter build web --release --base-href "/energy-game-UI/"
+      - run: touch build/web/.nojekyll
+      
+      - uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/web

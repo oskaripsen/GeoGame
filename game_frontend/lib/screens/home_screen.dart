@@ -27,8 +27,8 @@ class _HomeScreenState extends State<HomeScreen> {
     print('Using API URL: ${Config.apiUrl}'); // Debug print
     _dio = Dio(BaseOptions(
       baseUrl: Config.apiUrl,
-      connectTimeout: const Duration(seconds: 30), // Increased timeout
-      receiveTimeout: const Duration(seconds: 30),
+      connectTimeout: 30000, // 30 seconds in milliseconds
+      receiveTimeout: 30000, // 30 seconds in milliseconds
       contentType: 'application/json',
     ));
     startGame();
@@ -65,13 +65,14 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     } catch (e) {
       print("Detailed error: $e"); // More detailed error
-      if (e is DioException) {
+      if (e is DioError) {
         print("DioError type: ${e.type}"); // Show DioError type
         print("DioError message: ${e.message}"); // Show error message
       }
       if (!mounted) return;
       setState(() {
-        errorMessage = "Server connection failed (${e.toString()}). Is the server running?";
+        errorMessage =
+            "Server connection failed (${e.toString()}). Is the server running?";
       });
     }
   }
@@ -87,11 +88,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
       final data = response.data;
       final String target = data['target'] ?? 'Unknown';
-      
+
       setState(() {
         hintMessage = data['message'];
-        guessHistory.add(GuessRecord(guess, data['message']));  // Updated to pass string values
-        
+        guessHistory.add(GuessRecord(guess, data['message'])); // Updated to pass string values
+
         if (data['message'].toString().contains('Correct!')) {
           Navigator.pushReplacement(
             context,
@@ -128,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Energy Game'),
+        title: Text('Guess the country!'),
         actions: [
           IconButton(
             icon: Icon(Icons.refresh),
@@ -147,7 +148,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          EnergyDataWidget(energyData: energyData!),
+                          // Changed widget name and arguments to match EnergyPieChart's API
+                          EnergyPieChart(
+                            shares: Map<String, double>.from(
+                                energyData!['electricity_shares']),
+                            totalEnergy: energyData!['electricity_generation'],
+                          ),
                           if (guessHistory.isNotEmpty)
                             GuessHistoryWidget(guesses: guessHistory),
                           Padding(

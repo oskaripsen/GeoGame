@@ -1,6 +1,9 @@
 class Config {
-  static const String apiUrl = String.fromEnvironment(
-    'API_URL',
-    defaultValue: 'https://energy-game-api-6a18fc829f3d.herokuapp.com',
-  );
+  // Toggle this flag to switch environments
+  static const bool isDevelopment = true;  // true for local development, false for production
+
+  // Choose the API URL based on the environment
+  static String get apiUrl => isDevelopment
+      ? 'http://localhost:5000'  // Local backend URL
+      : 'https://energy-game-api-6a18fc829f3d.herokuapp.com';  // Production backend URL
 }
