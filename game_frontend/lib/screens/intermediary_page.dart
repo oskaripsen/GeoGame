@@ -27,7 +27,7 @@ class IntermediaryPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 24.0),
                 Text(
-                  'Rules for ${category.name}',
+                  "${category.name}",
                   style: const TextStyle(
                     fontSize: 24.0,
                     fontWeight: FontWeight.bold,
@@ -65,9 +65,9 @@ class IntermediaryPage extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      const Text(
-                        'Why This Matters',
-                        style: TextStyle(
+                      Text(
+                        category.importanceTitle,
+                        style: const TextStyle(
                           fontSize: 20.0,
                           fontWeight: FontWeight.bold,
                           color: Colors.blue,
@@ -76,7 +76,7 @@ class IntermediaryPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 12.0),
                       Text(
-                        'Placeholder text about why ${category.name} is a key pillar of society and why it is relevant to learn about.',
+                        category.importanceDescription,
                         style: const TextStyle(
                           fontSize: 16.0,
                           height: 1.4,
